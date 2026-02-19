@@ -1,18 +1,5 @@
-"use client";
+import Home from "@/components/homepage/Home";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-
-export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const profile = localStorage.getItem("calorifyx_profile");
-
-    if (!profile) {
-      router.replace("/login");
-    }
-  }, [router]);
-
-  return <div>Dashboard</div>;
+export default function Page() {
+  return <Home />;
 }
