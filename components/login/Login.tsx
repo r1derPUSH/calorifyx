@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./Login.module.scss";
+import {
+  convertHeightToCm,
+  convertWeightToKg,
+} from "@/shared/utils/convert-to-correct-unit";
 
 export default function Login() {
   const router = useRouter();
@@ -20,10 +24,15 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const weightNumber = Number(weight);
+    const heightNumber = Number(height);
+
     const profile = {
       name,
-      weight: Number(weight),
-      height: Number(height),
+      weight: weightNumber,
+      height: heightNumber,
+      weightUnit,
+      heightUnit,
       createdAt: new Date().toISOString(),
     };
 
