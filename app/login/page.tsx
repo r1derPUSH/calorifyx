@@ -1,5 +1,5 @@
-import Login from "../../components/login/login";
+import Login from "@/components/login/Login";
 
-export default function Onboard() {
+export default function LoginSection() {
   return <Login />;
 }
