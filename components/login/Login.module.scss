@@ -224,6 +224,23 @@
   color: #111827;
 }
 
+.dropdownItem {
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s ease;
+}
+
+.dropdownItem:hover,
+.dropdownItem:focus {
+  background: #f1f5f9;
+  outline: none;
+}
+
 /* animation */
 
 .card > * {

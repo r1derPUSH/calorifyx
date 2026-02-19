@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./Login.module.scss";
 
@@ -25,7 +25,11 @@ export default function Login() {
   const currentWeight = Number(weight);
   const target = Number(targetWeight);
 
+  const weightRef = useRef<HTMLDivElement>(null);
+  const heightRef = useRef<HTMLDivElement>(null);
+
   const isInvalid =
+    target <= 0 ||
     (goal === "cut" && target >= currentWeight) ||
     (goal === "gain" && target <= currentWeight);
 
@@ -62,7 +66,36 @@ export default function Login() {
     if (goal === "gain") {
       setTargetWeight(String(current + 5));
     }
-  }, [goal]);
+  }, [goal, weight]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      if (weightRef.current && !weightRef.current.contains(target)) {
+        setWeightOpen(false);
+      }
+
+      if (heightRef.current && !heightRef.current.contains(target)) {
+        setHeightOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setWeightOpen(false);
+        setHeightOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, []);
 
   return (
     <div className={styles.wrapper}>
@@ -88,9 +121,14 @@ export default function Login() {
                 required
               />
 
-              <div className={styles.select}>
+              <div className={styles.select} ref={weightRef}>
                 <button
                   type="button"
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      setWeightOpen(false);
+                    }
+                  }}
                   onClick={() => {
                     setWeightOpen((prev) => !prev);
                     setHeightOpen(false);
@@ -112,23 +150,27 @@ export default function Login() {
 
                 {weightOpen && (
                   <div className={styles.dropdown}>
-                    <div
+                    <button
+                      type="button"
+                      className={styles.dropdownItem}
                       onClick={() => {
                         setWeightUnit("kg");
                         setWeightOpen(false);
                       }}
                     >
                       kg
-                    </div>
+                    </button>
 
-                    <div
+                    <button
+                      type="button"
+                      className={styles.dropdownItem}
                       onClick={() => {
                         setWeightUnit("lb");
                         setWeightOpen(false);
                       }}
                     >
                       lb
-                    </div>
+                    </button>
                   </div>
                 )}
               </div>
@@ -142,9 +184,14 @@ export default function Login() {
                 required
               />
 
-              <div className={styles.select}>
+              <div className={styles.select} ref={heightRef}>
                 <button
                   type="button"
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      setHeightOpen(false);
+                    }
+                  }}
                   onClick={() => {
                     setHeightOpen((prev) => !prev);
                     setWeightOpen(false);
@@ -166,23 +213,27 @@ export default function Login() {
 
                 {heightOpen && (
                   <div className={styles.dropdown}>
-                    <div
+                    <button
+                      type="button"
+                      className={styles.dropdownItem}
                       onClick={() => {
                         setHeightUnit("cm");
                         setHeightOpen(false);
                       }}
                     >
                       cm
-                    </div>
+                    </button>
 
-                    <div
+                    <button
+                      type="button"
+                      className={styles.dropdownItem}
                       onClick={() => {
                         setHeightUnit("inch");
                         setHeightOpen(false);
                       }}
                     >
                       inch
-                    </div>
+                    </button>
                   </div>
                 )}
               </div>
