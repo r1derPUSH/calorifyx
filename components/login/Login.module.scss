@@ -1,0 +1,46 @@
+@import "@/styles/variables";
+
+.wrapper {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  input {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid $color-border;
+    font-size: 14px;
+  }
+
+  button {
+    margin-top: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    background: $color-text;
+    color: white;
+    font-weight: 500;
+    transition: 0.2s ease;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+}
