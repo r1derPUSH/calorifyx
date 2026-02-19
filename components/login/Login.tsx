@@ -1,12 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./Login.module.scss";
-import {
-  convertHeightToCm,
-  convertWeightToKg,
-} from "@/shared/utils/convert-to-correct-unit";
 
 export default function Login() {
   const router = useRouter();
@@ -24,6 +20,15 @@ export default function Login() {
   const [weightOpen, setWeightOpen] = useState(false);
   const [heightOpen, setHeightOpen] = useState(false);
 
+  const [targetWeight, setTargetWeight] = useState("");
+
+  const currentWeight = Number(weight);
+  const target = Number(targetWeight);
+
+  const isInvalid =
+    (goal === "cut" && target >= currentWeight) ||
+    (goal === "gain" && target <= currentWeight);
+
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStep(2);
@@ -34,6 +39,7 @@ export default function Login() {
       name,
       weight: Number(weight),
       height: Number(height),
+      targetWeight: Number(targetWeight),
       weightUnit,
       heightUnit,
       goal,
@@ -43,6 +49,20 @@ export default function Login() {
     localStorage.setItem("calorifyx_profile", JSON.stringify(profile));
     router.replace("/");
   };
+
+  useEffect(() => {
+    if (!weight) return;
+
+    const current = Number(weight);
+
+    if (goal === "cut") {
+      setTargetWeight(String(current - 5));
+    }
+
+    if (goal === "gain") {
+      setTargetWeight(String(current + 5));
+    }
+  }, [goal]);
 
   return (
     <div className={styles.wrapper}>
@@ -192,6 +212,7 @@ export default function Login() {
                 ← Back
               </button>
             </div>
+
             <h1>Your Goal</h1>
 
             <div className={styles.goalList}>
@@ -216,11 +237,24 @@ export default function Login() {
               </button>
             </div>
 
+            {goal && (
+              <div className={styles.targetInputRow}>
+                <input
+                  type="number"
+                  placeholder="Target weight"
+                  value={targetWeight}
+                  onChange={(e) => setTargetWeight(e.target.value)}
+                />
+
+                <div className={styles.unitLabel}>{weightUnit}</div>
+              </div>
+            )}
+
             <button
               type="button"
-              disabled={!goal}
-              className={styles.submitButton}
+              disabled={!goal || !targetWeight || isInvalid}
               onClick={handleFinalSubmit}
+              className={styles.submitButton}
             >
               Start
             </button>
