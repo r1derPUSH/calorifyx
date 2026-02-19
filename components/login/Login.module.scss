@@ -1,46 +1,152 @@
 @import "@/styles/variables";
 
 .wrapper {
-  min-height: calc(100vh - 64px);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: $color-bg;
 }
 
 .card {
   background: $color-surface;
   border: 1px solid $color-border;
-  border-radius: $radius;
-  padding: 40px;
+  border-radius: 20px;
+  padding: 48px;
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 
   h1 {
-    font-size: 20px;
+    font-size: 28px;
+    font-weight: 600;
     text-align: center;
+    margin-bottom: 10px;
   }
+}
 
-  input {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid $color-border;
+// Inputs
+
+.inputRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.card input {
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid $color-border;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.card input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+// Select
+
+.select {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.selectButton {
+  height: 48px;
+  min-width: 80px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid $color-border;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.selectButton:hover {
+  background: #f9fafb;
+}
+
+.selectButton.open {
+  border-color: #111;
+}
+
+.selectButton.open .arrow {
+  transform: rotate(180deg);
+}
+
+.arrow {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border: 1px solid $color-border;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  z-index: 20;
+  min-width: 80px;
+  animation: fadeIn 0.15s ease forwards;
+
+  div {
+    padding: 12px 16px;
+    cursor: pointer;
     font-size: 14px;
+    transition: background 0.15s ease;
   }
 
-  button {
-    margin-top: 8px;
-    padding: 12px;
-    border-radius: 10px;
-    background: $color-text;
-    color: white;
-    font-weight: 500;
-    transition: 0.2s ease;
+  div:hover {
+    background: #f3f4f6;
   }
+}
 
-  button:hover {
-    opacity: 0.9;
+// Submit
+
+.submitButton {
+  margin-top: 10px;
+  height: 52px;
+  border-radius: 16px;
+  background: #0f172a;
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  opacity: 0.9;
+}
+
+// Animation
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
