@@ -183,6 +183,15 @@ export default function Login() {
 
         {step === 2 && (
           <>
+            <div className={styles.stepHeader}>
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className={styles.backButton}
+              >
+                ← Back
+              </button>
+            </div>
             <h1>Your Goal</h1>
 
             <div className={styles.goalList}>
