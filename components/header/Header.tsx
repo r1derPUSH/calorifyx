@@ -13,8 +13,8 @@ const NAV_LINKS = [
   { href: "/habits", label: "Habits" },
   { href: "/nutrition", label: "Nutrition" },
   { href: "/shop", label: "Products" },
-  { href: "/profile", label: "Profile" },
   { href: "/goal", label: "Goal" },
+  { href: "/profile", label: "Profile" },
 ];
 
 const Header = () => {
@@ -24,8 +24,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <Image src={HeaderLogo} alt="Calorifyx logo" width={40} height={40} />
-        <span>Calorifyx</span>
+        <Image src={HeaderLogo} alt="Calorifyx logo" width={150} height={50} />
       </div>
 
       <nav className={styles.desktopNav}>
