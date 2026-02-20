@@ -92,3 +92,33 @@
     transform: translateY(0);
   }
 }
+
+.diff {
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gain {
+  color: #ef4444;
+}
+
+.loss {
+  color: #10b981;
+}
+
+.same {
+  color: #64748b;
+}
+
+.compareLabel {
+  font-weight: 400;
+  color: #94a3b8;
+  margin-left: 6px;
+}
+
+.firstEntry {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #94a3b8;
+}

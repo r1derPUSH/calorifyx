@@ -2,41 +2,43 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCalendarStore } from "@/shared/store/useCalendarStore";
 import styles from "./Calendar.module.scss";
 
 function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-
   const router = useRouter();
+  const { days } = useCalendarStore();
 
   const today = new Date();
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  const isCurrentMonth =
-    today.getFullYear() === year && today.getMonth() === month;
-
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  const days: (number | null)[] = [];
+  const isCurrentMonth =
+    today.getFullYear() === year && today.getMonth() === month;
+
+  const calendarDays: (number | null)[] = [];
 
   for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push(null);
+    calendarDays.push(null);
   }
 
   for (let i = 1; i <= daysInMonth; i++) {
-    days.push(i);
+    calendarDays.push(i);
   }
 
-  const handleClick = (day: number) => {
-    const formatted = `${year}-${String(month + 1).padStart(
+  const formatDateKey = (day: number) =>
+    `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(
       2,
       "0",
-    )}-${String(day).padStart(2, "0")}`;
+    )}`;
 
-    router.push(`/calendar/${formatted}`);
+  const handleClick = (day: number) => {
+    router.push(`/calendar/${formatDateKey(day)}`);
   };
 
   return (
@@ -71,20 +73,32 @@ function Calendar() {
       </div>
 
       <div className={styles.grid}>
-        {days.map((day, index) => {
+        {calendarDays.map((day, index) => {
           if (!day) {
             return <div key={index} className={styles.empty} />;
           }
+
+          const dateKey = formatDateKey(day);
+          const dayData = days[dateKey];
 
           const isToday = isCurrentMonth && day === today.getDate();
 
           return (
             <button
               key={index}
-              className={`${styles.cell} ${isToday ? styles.today : ""}`}
               onClick={() => handleClick(day)}
+              className={`${styles.cell} ${isToday ? styles.today : ""}`}
             >
-              <span>{day}</span>
+              <div className={styles.cellInner}>
+                <div className={styles.dayNumber}>{day}</div>
+
+                {dayData?.weight !== undefined && (
+                  <div className={styles.weightBadge}>
+                    {dayData.weight}
+                    <span>kg</span>
+                  </div>
+                )}
+              </div>
             </button>
           );
         })}

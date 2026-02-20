@@ -16,9 +16,19 @@ export default function Day({ date }: Props) {
 
   const parsedDate = new Date(year, month - 1, day);
 
-  const { setWeight, getDay } = useCalendarStore();
+  const { setWeight, getDay, days } = useCalendarStore();
 
   const existing = getDay(date);
+
+  const yesterday = new Date(parsedDate);
+  yesterday.setDate(parsedDate.getDate() - 1);
+
+  const yYear = yesterday.getFullYear();
+  const yMonth = String(yesterday.getMonth() + 1).padStart(2, "0");
+  const yDay = String(yesterday.getDate()).padStart(2, "0");
+
+  const yesterdayKey = `${yYear}-${yMonth}-${yDay}`;
+  const yesterdayData = days[yesterdayKey];
 
   const [weight, setWeightInput] = useState<number | "">(
     existing?.weight ?? "",
@@ -29,6 +39,14 @@ export default function Day({ date }: Props) {
     month: "long",
     year: "numeric",
   });
+
+  const todayWeight = existing?.weight;
+
+  let weightDiff: number | null = null;
+
+  if (todayWeight !== undefined && yesterdayData?.weight !== undefined) {
+    weightDiff = todayWeight - yesterdayData.weight;
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -69,6 +87,30 @@ export default function Day({ date }: Props) {
           >
             Save
           </button>
+          {todayWeight !== undefined && (
+            <>
+              {weightDiff !== null && (
+                <div
+                  className={`${styles.diff} ${
+                    weightDiff > 0
+                      ? styles.gain
+                      : weightDiff < 0
+                        ? styles.loss
+                        : styles.same
+                  }`}
+                >
+                  {weightDiff > 0 && `+${weightDiff} kg`}
+                  {weightDiff < 0 && `${weightDiff} kg`}
+                  {weightDiff === 0 && "No change"}
+                  <span className={styles.compareLabel}> vs yesterday</span>
+                </div>
+              )}
+
+              {yesterdayData?.weight === undefined && (
+                <div className={styles.firstEntry}>First recorded weight</div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
