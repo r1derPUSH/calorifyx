@@ -7,19 +7,19 @@ import { useState } from "react";
 import styles from "./Header.module.scss";
 import HeaderLogo from "@/shared/img/header-logo.png";
 
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/calendar", label: "Calendar" },
+  { href: "/habits", label: "Habits" },
+  { href: "/nutrition", label: "Nutrition" },
+  { href: "/shop", label: "Products" },
+  { href: "/profile", label: "Profile" },
+  { href: "/goal", label: "Goal" },
+];
+
 const Header = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/calendar", label: "Calendar" },
-    { href: "/habits", label: "Habits" },
-    { href: "/nutrition", label: "Nutrition" },
-    { href: "/shop", label: "Products" },
-    { href: "/profile", label: "Profile" },
-    { href: "/goal", label: "Goal" },
-  ];
 
   return (
     <header className={styles.header}>
@@ -29,7 +29,7 @@ const Header = () => {
       </div>
 
       <nav className={styles.desktopNav}>
-        {navLinks.map((link) => (
+        {NAV_LINKS.map((link) => (
           <Link
             key={link.href}
             href={link.href}
@@ -42,13 +42,18 @@ const Header = () => {
         ))}
       </nav>
 
-      <button className={styles.burger} onClick={() => setIsOpen(!isOpen)}>
+      <button
+        className={styles.burger}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle navigation menu"
+        aria-expanded={isOpen}
+      >
         ☰
       </button>
 
       {isOpen && (
         <nav className={styles.mobileNav}>
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
