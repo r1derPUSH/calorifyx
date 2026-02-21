@@ -81,6 +81,24 @@ function Calendar() {
           const dateKey = formatDateKey(day);
           const dayData = days[dateKey];
 
+          let diff: number | null = null;
+
+          if (dayData?.weight !== undefined) {
+            const currentDateObj = new Date(year, month, day);
+            const prevDate = new Date(currentDateObj);
+            prevDate.setDate(currentDateObj.getDate() - 1);
+
+            const prevKey = `${prevDate.getFullYear()}-${String(
+              prevDate.getMonth() + 1,
+            ).padStart(2, "0")}-${String(prevDate.getDate()).padStart(2, "0")}`;
+
+            const prevData = days[prevKey];
+
+            if (prevData?.weight !== undefined) {
+              diff = dayData.weight - prevData.weight;
+            }
+          }
+
           const isToday = isCurrentMonth && day === today.getDate();
 
           return (
@@ -94,8 +112,19 @@ function Calendar() {
 
                 {dayData?.weight !== undefined && (
                   <div className={styles.weightBadge}>
-                    {dayData.weight}
-                    <span>kg</span>
+                    <span className={styles.weightValue}>
+                      {dayData.weight} kg
+                    </span>
+
+                    {diff !== null && diff !== 0 && (
+                      <span
+                        className={`${styles.diff} ${
+                          diff > 0 ? styles.gain : styles.loss
+                        }`}
+                      >
+                        ({diff > 0 ? `+${diff}` : diff})
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
