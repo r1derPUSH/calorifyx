@@ -178,7 +178,7 @@ export default function Day({ date }: Props) {
             <h3>Shopping</h3>
             <button
               className={styles.storeBtn}
-              onClick={() => router.push("/store")}
+              onClick={() => router.push("/shop")}
             >
               Go to Store
             </button>
