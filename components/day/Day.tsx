@@ -20,6 +20,8 @@ export default function Day({ date }: Props) {
 
   const existing = getDay(date);
 
+  const [isSaved, setIsSaved] = useState(existing?.weight !== undefined);
+
   const yesterday = new Date(parsedDate);
   yesterday.setDate(parsedDate.getDate() - 1);
 
@@ -82,6 +84,7 @@ export default function Day({ date }: Props) {
             onClick={() => {
               if (weight !== "") {
                 setWeight(date, weight);
+                setIsSaved(true);
               }
             }}
           >
@@ -110,6 +113,41 @@ export default function Day({ date }: Props) {
                 <div className={styles.firstEntry}>First recorded weight</div>
               )}
             </>
+          )}
+
+          {isSaved && (
+            <div className={styles.dashboardGrid}>
+              <div className={styles.card}>
+                <h3>Healthy Habits</h3>
+
+                <ul className={styles.defaultHabits}>
+                  <li>💧 Drink 2L of water</li>
+                  <li>🚶 10k steps</li>
+                  <li>🥗 Eat clean</li>
+                  <li>😴 7–8h sleep</li>
+                </ul>
+              </div>
+
+              <div className={styles.card}>
+                <h3>Notes</h3>
+
+                <textarea
+                  className={styles.textarea}
+                  placeholder="Write something about this day..."
+                />
+              </div>
+
+              <div className={styles.card}>
+                <h3>Shopping</h3>
+
+                <button
+                  className={styles.storeBtn}
+                  onClick={() => router.push("/shop")}
+                >
+                  Go to Store
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
