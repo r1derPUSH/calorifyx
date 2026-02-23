@@ -42,6 +42,9 @@ export default function Day({ date }: Props) {
 
   let weightDiff: number | null = null;
 
+  const [noteInput, setNoteInput] = useState("");
+  const [notes, setNotes] = useState<string[]>([]);
+
   if (todayWeight !== undefined && yesterdayData?.weight !== undefined) {
     weightDiff = todayWeight - yesterdayData.weight;
   }
@@ -50,6 +53,16 @@ export default function Day({ date }: Props) {
     if (weight !== "") {
       setWeight(date, weight);
     }
+  };
+
+  const handleAddNote = () => {
+    if (!noteInput.trim()) return;
+    setNotes((prev) => [...prev, noteInput.trim()]);
+    setNoteInput("");
+  };
+
+  const handleDeleteNote = (index: number) => {
+    setNotes((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -129,12 +142,38 @@ export default function Day({ date }: Props) {
 
           <div className={styles.card}>
             <h3>Notes</h3>
-            <textarea
-              className={styles.textarea}
-              placeholder="Write something about this day..."
-            />
-          </div>
 
+            <div className={styles.noteRow}>
+              <input
+                type="text"
+                className={styles.noteInput}
+                placeholder="Write something about this day..."
+                value={noteInput}
+                onChange={(e) => setNoteInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAddNote()}
+              />
+
+              <button className={styles.noteBtn} onClick={handleAddNote}>
+                Add
+              </button>
+            </div>
+
+            {notes.length > 0 && (
+              <ul className={styles.notesList}>
+                {notes.map((note, index) => (
+                  <li key={index} className={styles.noteItem}>
+                    <span>{note}</span>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => handleDeleteNote(index)}
+                    >
+                      ✕
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <div className={styles.card}>
             <h3>Shopping</h3>
             <button
