@@ -13,14 +13,14 @@ export default function Day({ date }: Props) {
   const router = useRouter();
 
   const [year, month, day] = date.split("-").map(Number);
-
   const parsedDate = new Date(year, month - 1, day);
 
   const { setWeight, getDay, days } = useCalendarStore();
-
   const existing = getDay(date);
 
-  const [isSaved, setIsSaved] = useState(existing?.weight !== undefined);
+  const [weight, setWeightInput] = useState<number | "">(
+    existing?.weight ?? "",
+  );
 
   const yesterday = new Date(parsedDate);
   yesterday.setDate(parsedDate.getDate() - 1);
@@ -31,10 +31,6 @@ export default function Day({ date }: Props) {
 
   const yesterdayKey = `${yYear}-${yMonth}-${yDay}`;
   const yesterdayData = days[yesterdayKey];
-
-  const [weight, setWeightInput] = useState<number | "">(
-    existing?.weight ?? "",
-  );
 
   const formattedDate = parsedDate.toLocaleDateString("en-US", {
     day: "numeric",
@@ -50,46 +46,48 @@ export default function Day({ date }: Props) {
     weightDiff = todayWeight - yesterdayData.weight;
   }
 
+  const handleSave = () => {
+    if (weight !== "") {
+      setWeight(date, weight);
+    }
+  };
+
   return (
     <div className={styles.wrapper}>
       <button className={styles.back} onClick={() => router.push("/calendar")}>
         ← Back
       </button>
 
-      <h1>{formattedDate}</h1>
+      <h1 className={styles.title}>{formattedDate}</h1>
+      <p className={styles.subtitle}>
+        Track your weight, habits and notes for this day.
+      </p>
 
-      <p>This is your daily overview.</p>
-      <p>You will track weight, calories and habits here.</p>
-      <div className={styles.card}>
+      <div className={styles.mainCard}>
         <div className={styles.cardHeader}>
           <h3>Weight</h3>
           <span className={styles.unit}>kg</span>
         </div>
 
-        <div className={styles.inputRow}>
-          <input
-            type="number"
-            placeholder="Enter weight"
-            value={weight}
-            onChange={(e) =>
-              setWeightInput(
-                e.target.value === "" ? "" : Number(e.target.value),
-              )
-            }
-            className={styles.input}
-          />
-
-          <button
-            className={styles.saveBtn}
-            onClick={() => {
-              if (weight !== "") {
-                setWeight(date, weight);
-                setIsSaved(true);
+        <div className={styles.weightSection}>
+          <div className={styles.formRow}>
+            <input
+              type="number"
+              placeholder="Enter weight"
+              value={weight}
+              onChange={(e) =>
+                setWeightInput(
+                  e.target.value === "" ? "" : Number(e.target.value),
+                )
               }
-            }}
-          >
-            Save
-          </button>
+              className={styles.input}
+            />
+
+            <button className={styles.saveBtn} onClick={handleSave}>
+              Save
+            </button>
+          </div>
+
           {todayWeight !== undefined && (
             <>
               {weightDiff !== null && (
@@ -114,43 +112,40 @@ export default function Day({ date }: Props) {
               )}
             </>
           )}
-
-          {isSaved && (
-            <div className={styles.dashboardGrid}>
-              <div className={styles.card}>
-                <h3>Healthy Habits</h3>
-
-                <ul className={styles.defaultHabits}>
-                  <li>💧 Drink 2L of water</li>
-                  <li>🚶 10k steps</li>
-                  <li>🥗 Eat clean</li>
-                  <li>😴 7–8h sleep</li>
-                </ul>
-              </div>
-
-              <div className={styles.card}>
-                <h3>Notes</h3>
-
-                <textarea
-                  className={styles.textarea}
-                  placeholder="Write something about this day..."
-                />
-              </div>
-
-              <div className={styles.card}>
-                <h3>Shopping</h3>
-
-                <button
-                  className={styles.storeBtn}
-                  onClick={() => router.push("/shop")}
-                >
-                  Go to Store
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {todayWeight !== undefined && (
+        <div className={styles.dashboard}>
+          <div className={styles.card}>
+            <h3>Healthy Habits</h3>
+            <ul className={styles.defaultHabits}>
+              <li>💧 Drink 2L of water</li>
+              <li>🚶 10k steps</li>
+              <li>🥗 Eat clean</li>
+              <li>😴 7–8h sleep</li>
+            </ul>
+          </div>
+
+          <div className={styles.card}>
+            <h3>Notes</h3>
+            <textarea
+              className={styles.textarea}
+              placeholder="Write something about this day..."
+            />
+          </div>
+
+          <div className={styles.card}>
+            <h3>Shopping</h3>
+            <button
+              className={styles.storeBtn}
+              onClick={() => router.push("/store")}
+            >
+              Go to Store
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
