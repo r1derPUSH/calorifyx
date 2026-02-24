@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface DayData {
   weight?: number;
@@ -13,19 +14,26 @@ interface CalendarState {
   getDay: (date: string) => DayData | undefined;
 }
 
-export const useCalendarStore = create<CalendarState>((set, get) => ({
-  days: {},
+export const useCalendarStore = create<CalendarState>()(
+  persist(
+    (set, get) => ({
+      days: {},
 
-  setWeight: (date, weight) =>
-    set((state) => ({
-      days: {
-        ...state.days,
-        [date]: {
-          ...state.days[date],
-          weight,
-        },
-      },
-    })),
+      setWeight: (date, weight) =>
+        set((state) => ({
+          days: {
+            ...state.days,
+            [date]: {
+              ...state.days[date],
+              weight,
+            },
+          },
+        })),
 
-  getDay: (date) => get().days[date],
-}));
+      getDay: (date) => get().days[date],
+    }),
+    {
+      name: "calorifyx-calendar",
+    },
+  ),
+);
