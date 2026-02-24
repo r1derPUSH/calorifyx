@@ -113,8 +113,8 @@ export default function Day({ date }: Props) {
                         : styles.same
                   }`}
                 >
-                  {weightDiff > 0 && `+${weightDiff} kg`}
-                  {weightDiff < 0 && `${weightDiff} kg`}
+                  {weightDiff > 0 && `+${weightDiff.toFixed(2)} kg`}
+                  {weightDiff < 0 && `${weightDiff.toFixed(2)} kg`}
                   {weightDiff === 0 && "No change"}
                   <span className={styles.compareLabel}> vs yesterday</span>
                 </div>
