@@ -95,7 +95,7 @@ function Calendar() {
             const prevData = days[prevKey];
 
             if (prevData?.weight !== undefined) {
-              diff = dayData.weight - prevData.weight;
+              diff = Math.round((dayData.weight - prevData.weight) * 100) / 100;
             }
           }
 
@@ -113,18 +113,26 @@ function Calendar() {
                 {dayData?.weight !== undefined && (
                   <div className={styles.weightBadge}>
                     <span className={styles.weightValue}>
-                      {dayData.weight} kg
+                      {dayData.weight.toFixed(2)} kg
                     </span>
 
-                    {diff !== null && diff !== 0 && (
-                      <span
-                        className={`${styles.diff} ${
-                          diff > 0 ? styles.gain : styles.loss
-                        }`}
-                      >
-                        ({diff > 0 ? `+${diff}` : diff})
-                      </span>
-                    )}
+                    <span
+                      className={`${styles.diff} ${
+                        diff !== null
+                          ? diff > 0
+                            ? styles.gain
+                            : diff < 0
+                              ? styles.loss
+                              : styles.neutral
+                          : styles.neutral
+                      }`}
+                    >
+                      {diff !== null
+                        ? diff > 0
+                          ? `+${diff.toFixed(2)}`
+                          : diff.toFixed(2)
+                        : "+0.00"}
+                    </span>
                   </div>
                 )}
               </div>

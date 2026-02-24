@@ -65,17 +65,52 @@ export default function Day({ date }: Props) {
     setNotes((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const formatKey = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
+
+  const prevDate = new Date(parsedDate);
+  prevDate.setDate(parsedDate.getDate() - 1);
+
+  const nextDate = new Date(parsedDate);
+  nextDate.setDate(parsedDate.getDate() + 1);
+
+  const prevKey = formatKey(prevDate);
+  const nextKey = formatKey(nextDate);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const isFuture = nextDate > today;
   return (
     <div className={styles.wrapper}>
       <button className={styles.back} onClick={() => router.push("/calendar")}>
         ← Back
       </button>
+      <div className={styles.dateNav}>
+        <button
+          className={styles.navBtn}
+          onClick={() => router.push(`/calendar/${prevKey}`)}
+        >
+          ←
+        </button>
 
-      <h1 className={styles.title}>{formattedDate}</h1>
+        <h1 className={styles.title}>{formattedDate}</h1>
+
+        <button
+          className={styles.navBtn}
+          onClick={() => router.push(`/calendar/${nextKey}`)}
+          disabled={isFuture}
+        >
+          →
+        </button>
+      </div>{" "}
       <p className={styles.subtitle}>
         Track your weight, habits and notes for this day.
       </p>
-
       <div className={styles.mainCard}>
         <div className={styles.cardHeader}>
           <h3>Weight</h3>
@@ -127,7 +162,6 @@ export default function Day({ date }: Props) {
           )}
         </div>
       </div>
-
       {todayWeight !== undefined && (
         <div className={styles.dashboard}>
           <div className={styles.card}>
