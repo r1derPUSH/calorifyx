@@ -123,11 +123,15 @@ export default function Day({ date }: Props) {
               type="number"
               placeholder="Enter weight"
               value={weight}
-              onChange={(e) =>
+              min={1}
+              max={3}
+              onChange={(e) => {
+                if (e.target.value.length > 3) return;
+
                 setWeightInput(
                   e.target.value === "" ? "" : Number(e.target.value),
-                )
-              }
+                );
+              }}
               className={styles.input}
             />
 
