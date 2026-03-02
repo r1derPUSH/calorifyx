@@ -3,7 +3,7 @@
 import styles from "./Day.module.scss";
 import { useRouter } from "next/navigation";
 import { useCalendarStore } from "@/shared/store/useCalendarStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Props {
   date: string;
@@ -49,6 +49,25 @@ export default function Day({ date }: Props) {
     weightDiff = todayWeight - yesterdayData.weight;
   }
 
+  useEffect(() => {
+    const stored = localStorage.getItem("notes");
+    if (!stored) {
+      setNotes([]);
+      return;
+    }
+
+    const parsed = JSON.parse(stored);
+    setNotes(parsed[date] || []);
+  }, [date]);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   const handleSave = () => {
     if (weight !== "") {
       setWeight(date, weight);
@@ -57,12 +76,29 @@ export default function Day({ date }: Props) {
 
   const handleAddNote = () => {
     if (!noteInput.trim()) return;
-    setNotes((prev) => [...prev, noteInput.trim()]);
+
+    const newNotes = [...notes, noteInput.trim()];
+    setNotes(newNotes);
     setNoteInput("");
+
+    const stored = localStorage.getItem("notes");
+    const parsed = stored ? JSON.parse(stored) : {};
+
+    parsed[date] = newNotes;
+
+    localStorage.setItem("notes", JSON.stringify(parsed));
   };
 
   const handleDeleteNote = (index: number) => {
-    setNotes((prev) => prev.filter((_, i) => i !== index));
+    const newNotes = notes.filter((_, i) => i !== index);
+    setNotes(newNotes);
+
+    const stored = localStorage.getItem("notes");
+    const parsed = stored ? JSON.parse(stored) : {};
+
+    parsed[date] = newNotes;
+
+    localStorage.setItem("notes", JSON.stringify(parsed));
   };
 
   const formatKey = (d: Date) => {
