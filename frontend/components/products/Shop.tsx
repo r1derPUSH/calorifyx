@@ -30,19 +30,28 @@ export default async function ShopPage() {
 
           return (
             <div key={product.id} className={styles.card}>
-              {imageUrl && (
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
-                  alt={product.title}
-                  className={styles.image}
-                />
-              )}
+              <div className={styles.imageWrapper}>
+                {imageUrl && (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
+                    alt={product.title}
+                    className={styles.image}
+                  />
+                )}
+              </div>
 
-              <h3>{product.title}</h3>
-              <p>{product.description}</p>
-              <a href={product.buyLink} target="_blank">
-                Buy Now
-              </a>
+              <div className={styles.content}>
+                <h3 className={styles.productTitle}>{product.title}</h3>
+                <p className={styles.description}>{product.description}</p>
+
+                <a
+                  href={product.buyLink}
+                  target="_blank"
+                  className={styles.button}
+                >
+                  Buy Now →
+                </a>
+              </div>
             </div>
           );
         })}
