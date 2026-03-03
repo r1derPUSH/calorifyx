@@ -12,7 +12,7 @@ type Profile = {
   targetWeight: number;
   weightUnit: "kg" | "lb";
   heightUnit: "cm" | "inch";
-  goal: "cut" | "gain";
+  goal: "cut" | "gain" | "loss";
   createdAt: string;
 };
 
@@ -36,10 +36,13 @@ export default function Home() {
   if (loading) return null;
   if (!profile) return null;
 
-  const progress =
-    profile.goal === "cut"
-      ? profile.weight - profile.targetWeight
-      : profile.targetWeight - profile.weight;
+  const isLoss = profile.goal === "loss";
+
+  const rawProgress = isLoss
+    ? profile.weight - profile.targetWeight
+    : profile.targetWeight - profile.weight;
+
+  const progress = Math.abs(Number(rawProgress.toFixed(1)));
 
   return (
     <div className={styles.wrapper}>
@@ -57,7 +60,7 @@ export default function Home() {
           <div className={styles.statBox}>
             <span>Target Weight</span>
             <strong>
-              {profile.targetWeight} {profile.weightUnit}
+              {profile.targetWeight.toFixed(2)} {profile.weightUnit}
             </strong>
           </div>
 
@@ -71,14 +74,17 @@ export default function Home() {
           <div className={styles.statBox}>
             <span>Goal</span>
             <strong>
-              {profile.goal === "cut" ? "Lose Weight" : "Gain Weight"}
+              {profile.goal === "loss"
+                ? "Lose Weight"
+                : profile.goal === "gain"
+                  ? "Gain Weight"
+                  : "Build Muscle"}
             </strong>
           </div>
         </div>
 
         <div className={styles.progressBox}>
-          You need to {profile.goal === "cut" ? "lose" : "gain"} {progress}{" "}
-          {profile.weightUnit}
+          You need to {isLoss ? "lose" : "gain"} {progress} {profile.weightUnit}
         </div>
       </div>
     </div>
